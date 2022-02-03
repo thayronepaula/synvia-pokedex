@@ -9,8 +9,15 @@ import {
   PokemonType,
 } from "./styles";
 
+import useAxios from "../../hooks/useAxios";
+
+import { Colors, PokemonResponse } from "../../types";
+
 const index = () => {
-  const [data, setData] = React.useState([]);
+  const [pokemon, setPokemon] = React.useState<PokemonResponse | null>(null);
+
+  const { data:colors } = useAxios<Colors>("/api/typecolors");
+
   React.useEffect(() => {
     const getPokemons = async () => {
       const response = await fetch(
@@ -18,37 +25,39 @@ const index = () => {
       );
       const json = await response.json();
 
-      console.log(json);
+   
 
-      setData(json);
+      setPokemon(json);
     };
     getPokemons();
   }, []);
-  const exemple = data.results?.slice(0, 1);
+  const exemple = pokemon?.results.slice(0,15);
+
 
   return (
     <Pokemon>
-      {exemple?.map((item: any, index: number) => (
+      {exemple?.map(({ name, national_number, sprites, type }) => (
         <>
-          <Card key={index}>
+          <Card key={name + index}>
             <StyledImage
               width={128}
               height={128}
-              src={item.sprites.large}
-              alt="1"
+              src={sprites.large}
+              alt={name}
               quality={100}
             />
           </Card>
 
           <Info>
-            <NationalNumberText>N°{item.national_number}</NationalNumberText>
-            <PokemonName>{item.name}</PokemonName>
+            <NationalNumberText>N°{national_number}</NationalNumberText>
+            <PokemonName>{name}</PokemonName>
 
-            {item.type.map((type: any, index: number) => {
-
-              console.log(type)
+            {type.map((type, index) => {
+              if (!colors) return;
+      
+              const bgColor = colors[type.toLocaleLowerCase()]
               return (
-                <PokemonType key={index} bg="pink">
+                <PokemonType key={index} bg={bgColor}>
                   {type}
                 </PokemonType>
               );
