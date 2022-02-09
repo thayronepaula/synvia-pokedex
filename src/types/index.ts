@@ -18,14 +18,17 @@ export type Colors = {
   rock: string;
 };
 
+export type PokemonResults={
+  id:number
+  name: string;
+  national_number: string;
+  sprites: {
+    large: string;
+    normal: string;
+  };
+  type: string[];
+}
+
 export type PokemonResponse = {
-  results: {
-    name: string;
-    national_number: string;
-    sprites: {
-      large: string;
-      normal: string;
-    };
-    type: string[];
-  }[];
+  results: PokemonResults[];
 };
