@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode } from "react";
 import Image from "next/image";
 
 import { Container, Title, TypeList, TypePokemon } from "./styles";
@@ -28,7 +28,11 @@ const types = [
   "Water",
 ];
 
-const index = () => {
+type FilterPokemonsProps = {
+  children: ReactNode;
+};
+
+const index = ({ children }: FilterPokemonsProps) => {
   const { typesPokemons, onToggleArray } = useTypePokemonData();
   return (
     <Container>
@@ -57,7 +61,8 @@ const index = () => {
           );
         })}
       </TypeList>
-      <Title>Filtrar por tipo</Title>
+      <Title>Filtrar Favoritos</Title>
+      {children}
     </Container>
   );
 };
