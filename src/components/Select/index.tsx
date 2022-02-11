@@ -1,7 +1,7 @@
-import React from "react";
+import { SelectContainer, TitleSelect, Select } from "./styles";
 import { usePokemonData } from "../../context/pokemonData";
 
-const Select = () => {
+const index = () => {
   const { category, setCategory } = usePokemonData();
 
   const options = [
@@ -12,17 +12,20 @@ const Select = () => {
   ];
 
   return (
-    <select
-      value={category}
-      onChange={({ target }) => setCategory(target.value)}
-    >
-      {options.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
+    <SelectContainer>
+      <TitleSelect>Ordenar por</TitleSelect>
+      <Select
+        value={category}
+        onChange={({ target }) => setCategory(target.value)}
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </Select>
+    </SelectContainer>
   );
 };
 
-export default Select;
+export default index;
