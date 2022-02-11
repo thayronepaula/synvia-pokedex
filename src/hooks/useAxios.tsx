@@ -3,26 +3,32 @@ import axios from "axios";
 
 function useAxios<T>(url: string, options?: object) {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
-    setLoading(true);
-    setData(null);
-    setError(null);
-    axios
-      .get(url, options)
-      .then((res) => {
+    axios.get(url, options).then((res) => {
+      if (url.includes("pokemon")) {
+        const result = removeDuplicateAndAddId(res.data.results);
+        setData(result);
+      } else {
         setData(res.data);
-      })
-      .catch((_err) => {
-        setError("An error occurred. Awkward..");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [url]);
+      }
+    });
+  }, []);
 
-  return { data, loading, error };
+  return { data, setData };
 }
-export default useAxios;
+export default useAxios
+
+function removeDuplicateAndAddId(pokemons: any | null) {
+  //return pokemons with ID and not duplicates
+
+  return pokemons
+    ?.filter(
+      (values, index, array) =>
+        array.findIndex((t) => t.national_number === values.national_number) ===
+        index
+    )
+    .map((x, i) => {
+      x.id = i;
+      return x;
+    });
+}
