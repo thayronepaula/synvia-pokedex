@@ -1,11 +1,11 @@
 import Header from "../components/Header";
+import FirstFilter from "../components/FirstFilter";
+
 import PokemonInfo from "../components/PokemonInfo";
-import Search from "../components/Search";
-import Select from "../components/Select";
 import FilterPokemons from "../components/FilterPokemons";
 import SwitchFavorites from "../components/SwitchFavorites";
 
-import { PokemonGrid } from "../styles/home";
+import { PokemonGrid, Main, MainSection } from "../styles/home";
 
 import { usePokemonData } from "../context/pokemonData";
 import { useEffect, useState } from "react";
@@ -17,13 +17,32 @@ export default function Home() {
   const { typesPokemons } = useTypePokemonData();
 
   const [isToggled, setIsToggled] = useState(false);
-  const { filteredData, bySearch } = usePokemonData();
-  const [currentPokemons, setCurrentPokemons] = useState(4);
-  const [clickedIndex, setClickedIndex] = useState({});
+  const { filteredData } = usePokemonData();
+  const [currentPokemons, setCurrentPokemons] = useState(15);
+  const [clickedIndex, setClickedIndex] = useState(() => {
+    //trying get data on local storage
+    if (typeof window !== "undefined") {
+      const getPokemonFavorite = window.localStorage.getItem(
+        "@favoritesPokemonSynvia"
+      );
+
+      if (getPokemonFavorite) return JSON.parse(getPokemonFavorite);
+    }
+
+    return {};
+  });
 
   const { ref, inView } = useInView({
     threshold: 0,
   });
+
+  useEffect(() => {
+    //set favorites on local storage
+    window.localStorage.setItem(
+      "@favoritesPokemonSynvia",
+      JSON.stringify(clickedIndex)
+    );
+  }, [clickedIndex]);
 
   const handleClick = (index: number) => {
     setClickedIndex((state) => ({
@@ -33,7 +52,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (inView) setCurrentPokemons((old) => old + 10);
+    if (inView) setCurrentPokemons((old) => old + 5);
   }, [inView]);
 
   if (!filteredData) return null;
@@ -48,33 +67,39 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <>
       <Header />
-      <SwitchFavorites
-        id="favorites-switch"
-        toggled={isToggled}
-        onChange={({ target }) => setIsToggled(target.checked)}
-      />
-      <Search />
-      <Select />
-      <button onClick={bySearch}>test</button>
-      <FilterPokemons />
-      <PokemonGrid>
-        {Pokemons.slice(0, currentPokemons).map((pokemon) => (
-          <PokemonInfo
-            key={pokemon.id}
-            {...pokemon}
-            selected={clickedIndex[pokemon.id]}
-            onClick={() => handleClick(pokemon.id)}
-          />
-        ))}
-      </PokemonGrid>
+      <Main>
+        <FirstFilter />
 
-      {Pokemons.length > currentPokemons ? (
-        <p ref={ref}>Carregando mais Pokemons...</p>
-      ) : (
-        <p>Todos pokemons carregados</p>
-      )}
-    </div>
+        <MainSection>
+          <FilterPokemons>
+            <SwitchFavorites
+              id="favorites-switch"
+              toggled={isToggled}
+              onChange={({ target }) => setIsToggled(target.checked)}
+            />
+          </FilterPokemons>
+
+          <PokemonGrid>
+            {Pokemons.slice(0, currentPokemons).map((pokemon) => (
+              <PokemonInfo
+                key={pokemon.id}
+                {...pokemon}
+                selected={clickedIndex[pokemon.id]}
+                onClick={() => handleClick(pokemon.id)}
+              />
+            ))}
+            <div>
+              {Pokemons.length > currentPokemons && (
+                <p ref={ref}>Carregando mais Pokemons...</p>
+              )}
+
+              {Pokemons.length === 0 && <p>Nenhum pokemon encontrado</p>}
+            </div>
+          </PokemonGrid>
+        </MainSection>
+      </Main>
+    </>
   );
 }
