@@ -1,4 +1,8 @@
 import React from "react";
+
+import HeartLike from "../../../public/heart-like.svg";
+import HeartDislike from "../../../public/heart-dislike.svg";
+
 import {
   Pokemon,
   Card,
@@ -7,64 +11,62 @@ import {
   NationalNumberText,
   PokemonName,
   PokemonType,
+  Animation,
 } from "./styles";
 
-import useAxios from "../../hooks/useAxios";
+import { usePokemonData } from "../../context/pokemonData";
 
-import { Colors, PokemonResponse } from "../../types";
+type PokemonInfoProps = {
+  onClick?: () => void;
+  selected: boolean;
+  name: string;
+  national_number: string;
+  sprites: {
+    large: string;
+    normal: string;
+  };
+  type: string[];
+};
 
-const index = () => {
-  const [pokemon, setPokemon] = React.useState<PokemonResponse | null>(null);
+const index = ({ onClick, selected, ...pokemon }: PokemonInfoProps) => {
+  const { colors } = usePokemonData();
 
-  const { data:colors } = useAxios<Colors>("/api/typecolors");
-
-  React.useEffect(() => {
-    const getPokemons = async () => {
-      const response = await fetch(
-        "https://unpkg.com/pokemons@1.1.0/pokemons.json"
-      );
-      const json = await response.json();
-
-   
-
-      setPokemon(json);
-    };
-    getPokemons();
-  }, []);
-  const exemple = pokemon?.results.slice(0,15);
-
+  const { name, national_number, sprites, type } = pokemon;
 
   return (
     <Pokemon>
-      {exemple?.map(({ name, national_number, sprites, type }) => (
-        <>
-          <Card key={name + index}>
-            <StyledImage
-              width={128}
-              height={128}
-              src={sprites.large}
-              alt={name}
-              quality={100}
-            />
-          </Card>
+      <Card onClick={onClick}>
+        <StyledImage
+          width={128}
+          height={128}
+          src={sprites.large}
+          alt={name}
+          quality={100}
+        />
 
-          <Info>
-            <NationalNumberText>N°{national_number}</NationalNumberText>
-            <PokemonName>{name}</PokemonName>
+        <Animation selected={selected}>
+          {selected ? (
+            <img src={HeartLike.src} alt="Like" />
+          ) : (
+            <img src={HeartDislike.src} alt="Dislike" />
+          )}
+        </Animation>
+      </Card>
 
-            {type.map((type, index) => {
-              if (!colors) return;
-      
-              const bgColor = colors[type.toLocaleLowerCase()]
-              return (
-                <PokemonType key={index} bg={bgColor}>
-                  {type}
-                </PokemonType>
-              );
-            })}
-          </Info>
-        </>
-      ))}
+      <Info>
+        <NationalNumberText>N°{national_number}</NationalNumberText>
+        <PokemonName>{name}</PokemonName>
+        {type.map((type, index) => {
+          if (!colors) return;
+
+          const bgColor = colors[type.toLocaleLowerCase()];
+          return (
+            <PokemonType key={index} bg={bgColor}>
+              {type}
+            </PokemonType>
+          );
+        })}
+      </Info>
     </Pokemon>
   );
 };
