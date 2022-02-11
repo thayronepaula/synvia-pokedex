@@ -36,7 +36,7 @@ export function PokemonProvider({ children }: PokemonsProviderProps) {
 
   const [filteredData, setFilteredData] = useState<PokemonResults[]>();
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Menor número primeiro");
 
   const bySearch = () => {
     if (!search.trim()) return;
@@ -48,6 +48,15 @@ export function PokemonProvider({ children }: PokemonsProviderProps) {
     );
     setFilteredData(dataFilter);
   };
+
+  useEffect(() => {
+    if (pokemons && !search.trim()) {
+      setFilteredData(pokemons);
+      return;
+    } else {
+      bySearch();
+    }
+  }, [search, category, pokemons]);
 
   switch (category) {
     case "Nome(cres)":
@@ -66,13 +75,6 @@ export function PokemonProvider({ children }: PokemonsProviderProps) {
       awesomeSortAsc("national_number", filteredData);
       break;
   }
-
-  useEffect(() => {
-    if (pokemons && !search.trim()) {
-      setFilteredData(pokemons);
-      return;
-    }
-  }, [search, category, pokemons]);
 
   return (
     <PokemonContext.Provider
