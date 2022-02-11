@@ -19,8 +19,6 @@ export const Card = styled.div`
   height: 168px;
   background: #f2f2f2;
   border-radius: 3px;
-
-  margin-top: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
