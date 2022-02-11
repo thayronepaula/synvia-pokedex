@@ -11,18 +11,18 @@ export const Title = styled.h3`
 export const TypeList = styled.ul`
   display: flex;
   flex-wrap: wrap;
-  gap:5px;
+  gap: 5px;
 
-
-  max-width: 140px;
+  max-width: 165px;
 `;
 
-export const TypePokemon = styled.li`
+type TypePokemonProps = {
+  active: boolean;
+};
+export const TypePokemon = styled.li<TypePokemonProps>`
   display: flex;
-  background-color: #fff;
+  background-color: ${(props) => (props.active ? "#E2350D" : "#fff")};
   font-size: 12px;
-
-
 
   padding: 5px 12px;
 
@@ -30,4 +30,6 @@ export const TypePokemon = styled.li`
   border: 1px solid red;
 
   border-radius: 20px;
+  gap:3px;
 `;
+
