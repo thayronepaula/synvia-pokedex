@@ -1,16 +1,17 @@
 import styled from "styled-components";
 
 export const InputContainer = styled.form`
+  max-width: 584px;
   position: relative;
 
-  max-width: 584px;
+  flex: 1;
 `;
 
 export const Input = styled.input`
   width: 100%;
   height: 42px;
   border-radius: 30px;
-  padding: 0 18px;
+  padding: 0 44px 0 18px;
 
   font-size: 14px;
 
@@ -25,13 +26,16 @@ export const Input = styled.input`
   }
 `;
 
-export const IconPosition = styled.div`
+export const IconPosition = styled.button`
+  width: 28px;
+  height: 28px;
   position: absolute;
+  cursor: pointer;
+  background: none;
+  border: none;
   top: 23px;
-  right: 16px;
+  right: 10px;
 
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   z-index: 999;
-
-  
 `;
