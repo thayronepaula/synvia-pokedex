@@ -9,9 +9,12 @@ export const Pokemon = styled.div`
   width: 168px;
   font-size: 24px;
   line-height: 1;
+
+  cursor: pointer;
 `;
 
 export const Card = styled.div`
+  position: relative;
   font-size: 24px;
   height: 168px;
   background: #f2f2f2;
@@ -28,8 +31,7 @@ export const StyledImage = styled(Image)`
 `;
 
 export const Info = styled.div`
-padding:8px;
-
+  padding: 8px;
 `;
 
 export const NationalNumberText = styled.h6`
@@ -37,7 +39,7 @@ export const NationalNumberText = styled.h6`
   font-size: 12px;
   color: #bdbdbd;
 
-  margin-top:12px;
+  margin-top: 12px;
 `;
 
 export const PokemonName = styled.h3`
@@ -54,4 +56,33 @@ export const PokemonType = styled.span<PokemonTypeProps>`
   margin-right: 3px;
   padding: 4px 10px;
   border-radius: 3px;
+`;
+
+type AnimationTypeProps = {
+  selected: boolean;
+};
+
+export const Animation = styled.div<AnimationTypeProps>`
+  width: 20px;
+  top: 5px;
+  right: 5px;
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+
+  & img {
+    width: 100%;
+    object-fit: contain;
+  }
+
+  ${({ selected }) =>
+    selected &&
+    `
+    opacity: 1;
+  `}
+
+  ${Card}:hover & {
+    opacity: 1;
+    transition: opacity 0.1s;
+  }
 `;
