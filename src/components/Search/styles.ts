@@ -24,6 +24,10 @@ export const Input = styled.input`
   ::placeholder {
     color: #9e9e9e;
   }
+
+  @media (max-width: 640px) {
+    font-size:15px;
+  }
 `;
 
 export const IconPosition = styled.button`
@@ -38,4 +42,9 @@ export const IconPosition = styled.button`
 
   transform: translate(-50%, -50%);
   z-index: 999;
+
+  @media (max-width: 640px) {
+    top: 23px;
+    right: 2.5px;
+  }
 `;
