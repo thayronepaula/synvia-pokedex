@@ -6,12 +6,21 @@ export const SelectContainer = styled.div`
   align-items: center;
 
   gap: 16px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 4px;
+  }
 `;
 
 export const TitleSelect = styled.span`
   color: #656565;
   font-size: 12px;
   font-family: "Titillium Web", sans-serif;
+
+  @media (max-width: 640px) {
+    font-size:14px;
+  }
 `;
 export const Select = styled.select`
   width: 184px;
@@ -33,5 +42,9 @@ export const Select = styled.select`
     white-space: pre;
     min-height: 20px;
     padding: 0px 2px 1px;
+  }
+
+  @media (max-width: 640px) {
+    font-size:14px;
   }
 `;
